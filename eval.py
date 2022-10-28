@@ -48,19 +48,22 @@ def main() -> None:
     model.eval()
 
     actual = []
-    preds = []
+    pred = []
     with torch.no_grad():
         for features, labels in dataloader:
+            features = features.cuda()
+            labels = labels.cuda()
+
             out = model(features)
 
             # NOTE: No need to apply softmax as it will not change the classification results
             _, predicted = torch.max(out.data, 1)
 
-            preds.extend(predicted.flatten().tolist())
+            pred.extend(predicted.flatten().tolist())
             actual.extend(labels.flatten().tolist())
 
-    accuracy = accuracy_score(actual, preds)
-    precision, recall, fscore, _ = precision_recall_fscore_support(actual, preds, average="macro")
+    accuracy = accuracy_score(actual, pred)
+    precision, recall, fscore, _ = precision_recall_fscore_support(actual, pred, average="macro")
 
     print(f"{accuracy=:.3f}")
     print(f"{precision=:.3f}")

@@ -72,12 +72,11 @@ def main() -> None:
             loss.backward()
             optimizer.step()
 
-            # accumulate loss
+            # accumulate loss and log
             running_loss += loss.item()
-
             if idx % 375 == 374:
                 print(f"Epoch {epoch} | Steps: {idx + 1:<4} | Loss: {running_loss / 375:.3f}")
-                wandb.log({"epoch": epoch, "steps": idx + 1, "loss": running_loss})
+                wandb.log({"epoch": epoch, "steps": idx + 1, "loss": round(running_loss / 375, 3)})
                 running_loss = 0.0
 
     # Save the model
