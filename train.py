@@ -14,6 +14,7 @@ from model import MNISTModel
 
 # NOTE: Reproducibility
 torch.manual_seed(0)
+torch.use_deterministic_algorithms(True)
 
 
 def parse_args() -> argparse.Namespace:
