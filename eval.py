@@ -45,6 +45,7 @@ def main() -> None:
 
     model = MNISTModel()
     model.load_state_dict(torch.load(params.model_path))
+    model.cuda()
     model.eval()
 
     actual = []
