@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import os
 import json
 
 import torch
@@ -27,7 +28,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--learning_rate", type=float, default=2e-3, help="learning rate")
     parser.add_argument("--weight_decay", type=float, default=1e-5, help="weight decay")
     parser.add_argument("--epochs", type=int, default=4, help="number of epochs")
-    parser.add_argument("--model_path", type=str, default="model.pt", help="number of epochs")
+    parser.add_argument("--model_dir", type=str, default="model", help="directory to store models")
+    parser.add_argument("--model_name", type=str, default="model.pt", help="model path")
 
     return parser.parse_args()
 
@@ -80,11 +82,15 @@ def main() -> None:
                 wandb.log({"epoch": epoch, "steps": idx + 1, "loss": round(running_loss / 375, 3)})
                 running_loss = 0.0
 
+    # Create the directory for storing models if it does not already exist
+    if not os.path.exists(args.model_dir):
+        os.makedirs(args.model_dir)
+
     # Save the model
-    torch.save(model.module.state_dict(), args.model_path)
+    torch.save(model.module.state_dict(), os.path.join(args.model_dir, args.model_name))
 
     # Save the parameters
-    with open("params.json", "w") as file:
+    with open(os.path.join(args.model_dir, "params.json"), "w") as file:
         json.dump(vars(args), file, indent=4)
 
 

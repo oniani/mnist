@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import json
+import os
 
 import torch
 
@@ -19,7 +20,8 @@ class Params:
     learning_rate: float
     weight_decay: float
     epochs: int
-    model_path: str
+    model_dir: str
+    model_name: str
 
 
 def load_params(path: str) -> Params:
@@ -34,7 +36,7 @@ def load_params(path: str) -> Params:
 def main() -> None:
     """Evaluates the model."""
 
-    params = load_params("./params.json")
+    params = load_params("model/params.json")
 
     dataloader = mnist(
         batch_size=params.batch_size,
@@ -44,7 +46,7 @@ def main() -> None:
     )
 
     model = MNISTModel()
-    model.load_state_dict(torch.load(params.model_path))
+    model.load_state_dict(torch.load(os.path.join(params.model_dir, params.model_name)))
     model.cuda()
     model.eval()
 

@@ -7,7 +7,7 @@ def mnist(batch_size: int, shuffle: bool, num_workers: int, train: bool) -> Data
     """Gets the training data."""
 
     dataset = MNIST(
-        root="data",
+        root="dataset",
         train=train,
         download=True,
         transform=Compose([ToTensor(), Normalize(mean=(0.1307,), std=(0.3081,))]),
